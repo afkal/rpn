@@ -1,6 +1,5 @@
 //use std::collections::VecDeque;
 
-//pub fn run(expression: &str) -> &'static str {
 pub fn run(expression: &str) -> String {
 
     // implement stack as vector
@@ -15,25 +14,15 @@ pub fn run(expression: &str) -> String {
     }
     */
 
-    let command_iterator = expression.split(" ");
-    //let mut stack: VecDeque<&str> = commands.collect();
-    //let mut numbers : VecDeque<i32> = VecDeque::new();
+    let commands = expression.split(" ");
     //let mut commands: Vec<&str> = command_iterator.collect();
     let mut stack : Vec<i32> = Vec::new();
-
-    //stack.push("testing");
-    //println!("{:?}", stack);
-
-    // Evaluate stack
-    //let value1: i32 = stack.pop()
     
     //println!("Initial commands {:?}", commands);
     //
-    for item in command_iterator {
-    //while let Some(item) = commands.pop() {
+    for item in commands {
         println!("--- Starting new round:");
-        // Prints 3, 2, 1
-        // evaluate item
+        println!("Processing item: {}", item);
         if item.trim().parse::<f64>().is_ok() {
             let num: i32 = item.parse().unwrap();
             stack.push(num);
@@ -41,9 +30,23 @@ pub fn run(expression: &str) -> String {
             if item == "+" {
                 let n1 = stack.pop().expect("Value missing - error in expression!");
                 let n2 = stack.pop().expect("Value missing - error in expression!");
-                let sum = n1 + n2;
+                let result = n1 + n2;
                 println!("Plus operation ({}+{}={})", n1, n2, n1+n2);
-                stack.push(sum);
+                stack.push(result);
+            }
+            if item == "-" {
+                let n1 = stack.pop().expect("Value missing - error in expression!");
+                let n2 = stack.pop().expect("Value missing - error in expression!");
+                let result = n2 - n1;
+                println!("Plus operation ({}+{}={})", n1, n2, n2-n1);
+                stack.push(result);                
+            }
+            if item == "*" {
+                let n1 = stack.pop().expect("Value missing - error in expression!");
+                let n2 = stack.pop().expect("Value missing - error in expression!");
+                let result = n2 * n1;
+                println!("Plus operation ({}+{}={})", n1, n2, n1*n2);
+                stack.push(result);                
             }
         }
         //println!("{item}");
@@ -53,16 +56,6 @@ pub fn run(expression: &str) -> String {
     let result = stack[0];
     stack.pop();
     return result.to_string().to_owned();
-    //println!("{:?}", numbers);
-    /*
-    if let Some(item) = stack.pop_front() {
-        println!("{}", item);
-    }
-    */
-
-
-    //let value1: i32 = stack.pop_front()
-    //"5".to_string()
 }
 
 
@@ -91,4 +84,24 @@ mod tests {
         assert_eq!("20", run(command));
     }
 
+    #[test]
+    fn substract_two_integers() {
+        let command = "5 4 -";
+        //evaluate(command);
+        assert_eq!("1", run(command));
+    }
+
+    #[test]
+    fn long_addition_and_substraction() {
+        let command = "2 3 4 5 6 + - + +";
+        //evaluate(command);
+        assert_eq!("-2", run(command));
+    }
+
+    #[test]
+    fn long_addition_substraction_multiplication() {
+        let command = "2 3 4 5 6 + - * +";
+        //evaluate(command);
+        assert_eq!("-19", run(command));
+    }
 }
